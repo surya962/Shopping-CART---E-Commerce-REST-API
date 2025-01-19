@@ -1,0 +1,62 @@
+# Many image has a single product so many to one relationship from Image to Product and vice versa is one to many relationship
+# @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true) orphanRemoval=true Meaning is If there a product is going to be deleted then
+  images related to that product is also going to be deleted along from Database but for cascade=CascadeType.ALL meaning is delete relationship.
+  so that the product can be deleted
+# Product to Category has many to one relationship and vice versa is one to many. 
+# Here Product stand for let say mobile , laptop, bike, car etc
+# Here repository package contains interfaces which extend JPARepository which mainly help us for CRUD operation and all.
+# @RequiredArgsConstructor is lambok anotation used for constructor injection and make sure bean need to be final.
+  This annotation generates a constructor that initializes all final fields and fields marked with @NonNull . It's particularly useful 
+  when you have fields in your class that should be initialized at object creation and should not be changed afterwards
+# @Data or @getter and @setter use for getter and setter methods but it is not recommended to use @data direct in entity class.
+# Inventory in Product class is basically stock/Numbers of product available.
+# We use modelMapper dependency to map models , ex - product to productdto or image to imagedto
+# We use dto because dto give us the chance to select only the attributes that we wish to return to the caller but if we return the whole
+  entity class attributes then there are too many dependency and that might cause stack over flow.
+# DataInitializer class is basically creating users through it's method when application will start.
+# comment the createDefaultUser and createDefaultAdmin call in Method onApplicationEvent in DataInitializer.java when they are not present.
+# JWTAuthEntryPoint is the class where the request from user land/call first.
+# @PreAuthorize("hasRole('ROLE_ADMIN')") is anotation that actually restrict to use the endpoint based on role
+# in JWT.io site you can see what is inside the token
+# To add a token in request get token and go inside Authorization and select bearer token in Auth Type and put token in the box
+# If a user try to add a product using it's token then it will unable to do it because admin can only add the product.
+# First we need to add things in cart and after we need to place order. Once the order is placed then the item from the cart is removed.
+
+-----FLOW------
+
+1 First enter the request to Auth Controller for token generation.
+2 After that which functionality needs token for their request we have to put this generated token there within the request for the same.
+
+-----END POINTS-----
+
+--PRODUCT--
+1 get all products            (http://localhost:9191/api/v1/products/all)
+2 add a new product           (http://localhost:9191/api/v1/products/add)
+3 get products by brand       (http://localhost:9191/api/v1/products/product/by-brand?brand=apple)
+4 get products by category    (http://localhost:9191/api/v1/products/product/electronics/all/products)
+
+--IMAGE--
+1 upload for product          (http://localhost:9191/api/v1/images/upload?productId=4)
+2 get image by id             (http://localhost:9191/api/v1/images/image/download/1)
+
+--CATEGORY--
+
+--CART--
+1 add item to cart            (http://localhost:9191/api/v1/cartItems/item/add?cartId&productId=4&quantity=5)
+2 update item quantity        (http://localhost:9191/api/v1/cartItems/cart/1/item/1/update?quantity=3)
+3 remove cart item            (http://localhost:9191/api/v1/cartItems/cart/1/item/1/remove)
+4 get cart by id              (http://localhost:9191/api/v1/carts/2/my-cart)
+5 clear cart by cart id       (http://localhost:9191/api/v1/carts/2/clear)
+6 get total price for cart    (http://localhost:9191/api/v1/carts/1/cart/total-price)
+
+--USER--
+1 get user by id              (http://localhost:9191/api/v1/users/1/user)
+
+--ORDER--
+1 place order                 (http://localhost:9191/api/v1/orders/user/place-order?userId=6)
+
+--AUTH--
+1 login user/admin            (http://localhost:9191/api/v1/auth/login)
+
+
+  1 get user by id -> It is to get the user details and its orders and cart details.
